@@ -80,8 +80,8 @@ const getSchoolStats = async (req, res) => {
     });
 
     // 3. Hozirgi faol darslar
-    const Lesson = require('../models/Lesson');
-    const activeLessonsCount = await Lesson.countDocuments({ 
+    const LessonSession = require('../models/LessonSession');
+    const activeLessonsCount = await LessonSession.countDocuments({ 
       status: 'active',
       schoolId
     });
