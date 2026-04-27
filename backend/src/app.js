@@ -44,20 +44,22 @@ app.use('/api/schedules', require('./routes/scheduleRoutes'));
 app.get('/api/init-db', async (req, res) => {
   try {
     const User = require('./models/User');
+    const bcrypt = require('bcryptjs');
     
-    const adminExists = await User.findOne({ username: 'admin' });
-    if (!adminExists) {
-      await User.create({
-        fullName: 'Super Admin',
-        username: 'admin',
-        password: 'password123',
-        role: 'superadmin',
-        status: 'active'
-      });
-      res.send('Database Initialized! Login: admin, Pass: password123');
-    } else {
-      res.send('Database already has an admin.');
-    }
+    // Eski admin bo'lsa uni o'chirib, yangisini (to'g'ri parollisini) yaratamiz
+    await User.deleteOne({ username: 'admin' });
+
+    const hashedPassword = await bcrypt.hash('password123', 10);
+    
+    await User.create({
+      fullName: 'Super Admin',
+      username: 'admin',
+      password: hashedPassword,
+      role: 'superadmin',
+      status: 'active'
+    });
+    
+    res.send('Database Refreshed! Login: admin, Pass: password123 (Xavfsiz hashlandi)');
   } catch (error) {
     res.status(500).send(error.message);
   }
