@@ -44,22 +44,20 @@ app.use('/api/schedules', require('./routes/scheduleRoutes'));
 app.get('/api/init-db', async (req, res) => {
   try {
     const User = require('./models/User');
-    const bcrypt = require('bcryptjs');
     
-    // Eski admin bo'lsa uni o'chirib, yangisini (to'g'ri parollisini) yaratamiz
+    // Eski adminni o'chirib, toza yangisini yaratamiz
     await User.deleteOne({ username: 'admin' });
-
-    const hashedPassword = await bcrypt.hash('password123', 10);
     
+    // Parolni oddiy yozamiz, User modeli uni o'zi 'pre-save'da hashlaydi
     await User.create({
       fullName: 'Super Admin',
       username: 'admin',
-      password: hashedPassword,
+      password: 'password123',
       role: 'superadmin',
       status: 'active'
     });
     
-    res.send('Database Refreshed! Login: admin, Pass: password123 (Xavfsiz hashlandi)');
+    res.send('Database FIXED! Login: admin, Pass: password123 (Model tomonidan hashlandi)');
   } catch (error) {
     res.status(500).send(error.message);
   }
