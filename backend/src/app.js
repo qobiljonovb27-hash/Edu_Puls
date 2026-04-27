@@ -40,4 +40,27 @@ app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/lessons', require('./routes/lessonRoutes'));
 app.use('/api/schedules', require('./routes/scheduleRoutes'));
 
+// Temporary Seed Route for Deployment
+app.get('/api/init-db', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    
+    const adminExists = await User.findOne({ username: 'admin' });
+    if (!adminExists) {
+      await User.create({
+        fullName: 'Super Admin',
+        username: 'admin',
+        password: 'password123',
+        role: 'superadmin',
+        status: 'active'
+      });
+      res.send('Database Initialized! Login: admin, Pass: password123');
+    } else {
+      res.send('Database already has an admin.');
+    }
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
 module.exports = app;
