@@ -10,7 +10,8 @@ const {
   updateBellSchedule,
   getClasses,
   addClass,
-  resetSchoolData
+  resetSchoolData,
+  getSchoolAnalytics
 } = require('../controllers/schoolController');
 const { protect } = require('../middlewares/authMiddleware');
 const { authorize } = require('../middlewares/roleMiddleware');
